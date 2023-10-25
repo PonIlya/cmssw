@@ -42,7 +42,6 @@ import getpass
 import errno
 import sqlite3
 
-
 horizontal_rule = "="*60
 
 def run_upload(**parameters):
@@ -62,8 +61,7 @@ def run_upload(**parameters):
 def getInput(default, prompt = ''):
     '''Like raw_input() but with a default and automatic strip().
     '''
-
-    answer = raw_input(prompt)
+    answer = input(prompt)
     if answer:
         return answer.strip()
 
@@ -73,7 +71,6 @@ def getInput(default, prompt = ''):
 def getInputWorkflow(prompt = ''):
     '''Like getInput() but tailored to get target workflows (synchronization options).
     '''
-
     while True:
         workflow = getInput(defaultWorkflow, prompt)
 
@@ -86,7 +83,6 @@ def getInputWorkflow(prompt = ''):
 def getInputChoose(optionsList, default, prompt = ''):
     '''Makes the user choose from a list of options.
     '''
-
     while True:
         index = getInput(default, prompt)
 
@@ -99,11 +95,10 @@ def getInputChoose(optionsList, default, prompt = ''):
 
 
 def getInputRepeat(prompt = ''):
-    '''Like raw_input() but repeats if nothing is provided and automatic strip().
+    '''Like input() but repeats if nothing is provided and automatic strip().
     '''
-
     while True:
-        answer = raw_input(prompt)
+        answer = input(prompt)
         if answer:
             return answer.strip()
 
@@ -227,7 +222,7 @@ I will ask you some questions to fill the metadata file. For some of the questio
                     '\nIs it fine (i.e. save in %s and *upload* the conditions if this is the latest file)?\nAnswer [n]: ' % metadataFilename).lower() == 'y':
             break
     print('Saving generated metadata in %s...'% metadataFilename)
-    with open(metadataFilename, 'wb') as metadataFile:
+    with open(metadataFilename, 'w') as metadataFile:
         metadataFile.write(metadata)
 
 def parse_arguments():
@@ -282,7 +277,7 @@ def parse_arguments():
 
 	# default is the production server, which can point to either database anyway
 	server_alias_to_url = {
-		"prep" : "https://cms-conddb-dev.cern.ch/cmsDbCondUpload/",
+		"prep" : "https://my-dev-instance.cern.ch/cmsDbCondUpload/",
 		"dev" : "https://cms-conddb-dev.cern.ch/cmsDbCondUpload/",
 		"prod" : "https://cms-conddb.cern.ch/cmsDbCondUpload/"
 	}
@@ -306,20 +301,25 @@ def parse_arguments():
 	# use netrc to get username and password
 	try:
 		netrc_file = command_line_data.netrc
+		print(f'netrc_file: {netrc_file}')
 		auth_path = command_line_data.authPath
+		print(f'auth_path: {auth_path}')
+		netrc_authenticators = None
 		if not auth_path is None:
 			if netrc_file is None:
 				netrc_file = os.path.join(auth_path,'.netrc')
+				print(f'netrc_file: {netrc_file}')
 			else:
 				netrc_file = os.path.join(auth_path, netrc_file)
-
-		netrc_authenticators = netrc.netrc(netrc_file).authenticators("ConditionUploader")
+				print(f'auth_path: {auth_path}')
+		if not netrc_file is None:
+			netrc_authenticators = netrc.netrc(netrc_file).authenticators("ConditionUploader")
 		if netrc_authenticators == None:
 			print("Your netrc file must contain the key 'ConditionUploader'.")
-			manual_input = raw_input("Do you want to try to type your credentials? ")
+			manual_input = getInput("Do you want type your credentials (y/n)? ")
 			if manual_input == "y":
 				# ask for username and password
-				username = raw_input("Username: ")
+				username = getInput("Username: ")
 				password = getpass.getpass("Password: ")
 			else:
 				exit()
@@ -439,7 +439,7 @@ def parse_arguments():
 				value_to_print = metadata_dictionary[key] if metadata_dictionary[key] != None else defaults[key]
 				print("\t%s : %s" % (key, value_to_print))
 
-		if raw_input("\nDo you want to continue? [y/n] ") != "y":
+		if getInput("\nDo you want to continue? [y/n] ") != "y":
 			exit()
 
 	if metadata_dictionary["server"] == None:
@@ -472,7 +472,6 @@ if __name__ == "__main__":
 		print("If you specified a server please check it is correct. If that is not the issue please contact the AlcaDB team.")
 		print(horizontal_rule)
 		exit(1)
-
 	if server_version["version"] != __version__:
 		print(horizontal_rule)
 		print("Local upload script is different than server version. Please run the following command to get the latest script.")
