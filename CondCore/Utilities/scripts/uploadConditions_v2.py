@@ -27,8 +27,9 @@ except:
 	print("ERROR: Could not access the url query utiliy. Yoy are probably not in a CMSSW environment.")
 	exit(-1)
 try:
-	from StringIO import StringIO
+	from io import StringIO
 except:
+	print("ERROR: no access the to the io py module.")
 	pass
 import traceback
 import sys
@@ -112,25 +113,23 @@ I will ask you some questions to fill the metadata file. For some of the questio
 
         # Try to get the available inputTags
         try:
-            dataConnection = sqlite3.connect(dataFilename)
-            dataCursor = dataConnection.cursor()
-            dataCursor.execute('select name from sqlite_master where type == "table"')
-            tables = set(zip(*dataCursor.fetchall())[0])
+            table_name='TAG'
+            with sqlite3.connect(dataFilename) as dataConnection:
+                dataCursor = dataConnection.cursor()
+                dataCursor.execute(f"SELECT 1 FROM {table_name} LIMIT 1")
 
-            # only conddb V2 supported...
-            if 'TAG' in tables:
-                dataCursor.execute('select NAME from TAG')
+            if dataCursor.fetchone() is not None:
+               dataCursor.execute(f"SELECT name FROM {table_name}")
+               inputTags = dataCursor.fetchall()
             # In any other case, do not try to get the inputTags
             else:
                 raise Exception()
-
-            inputTags = dataCursor.fetchall()
-            if len(inputTags) == 0:
-                raise Exception()
-            inputTags = list(zip(*inputTags))[0]
-
-        except Exception:
+        #If the table "TAG" does not exist, a sqlite3.OperationalError exception will be thrown
+        except sqlite3.OperationalError as e:
             inputTags = []
+        except sqlite3.DatabaseError as e:
+            #Handling other database errors
+            print(f"A database error occurred: {e}")
 
         if len(inputTags) == 0:
             print('\nI could not find any input tag in your data file, but you can still specify one manually.')
@@ -141,7 +140,8 @@ I will ask you some questions to fill the metadata file. For some of the questio
         else:
             print('\nI found the following input tags in your SQLite data file:')
             for (index, inputTag) in enumerate(inputTags):
-                print('   %s) %s' % (index, inputTag))
+                #same like: print('   %s) %s' % (index, inputTag))
+                print('   {}) {}'.format(index, inputTag))
 
             inputTag = getInputChoose(inputTags, '0',
                                       '\nWhich is the input tag (i.e. the tag to be read from the SQLite data file)?\ne.g. 0 (you select the first in the list)\ninputTag [0]: ')
@@ -156,8 +156,8 @@ I will ask you some questions to fill the metadata file. For some of the questio
         destinationDatabase = ''
         ntry = 0
         print('\nWhich is the destination database where the tags should be exported?')
-        print('\n%s) %s' % ('oraprod', databases['oraprod']))
-        print('\n%s) %s' % ('oradev', databases['oradev']))
+       	print(f'\noraprod {databases["oraprod"]}')
+        print(f'oradev {databases["oradev"]}')
             
         while ( destinationDatabase not in databases.values() ): 
             if ntry==0:
@@ -216,12 +216,12 @@ I will ask you some questions to fill the metadata file. For some of the questio
         }
 
         metadata = json.dumps(metadata, sort_keys=True, indent=4)
-        print('\nThis is the generated metadata:\n%s' % metadata)
+        print(f'\nThis is the generated metadata:\n{metadata}')
 
         if getInput('n',
                     '\nIs it fine (i.e. save in %s and *upload* the conditions if this is the latest file)?\nAnswer [n]: ' % metadataFilename).lower() == 'y':
             break
-    print('Saving generated metadata in %s...'% metadataFilename)
+    print(f'Saving generated metadata in {metadataFilename}...')
     with open(metadataFilename, 'w') as metadataFile:
         metadataFile.write(metadata)
 
@@ -399,7 +399,7 @@ def parse_arguments():
 		else:
 			command_line_data.userText = command_line_data.userText\
 										if command_line_data.userText != None\
-										else str(raw_input("Tag's description [can be empty]:"))
+										else input("Tag's description [can be empty]:")
 			metadata_dictionary = command_line_data.__dict__
 
 	if command_line_data.metadataFile != None:
@@ -408,7 +408,7 @@ def parse_arguments():
 		metadata_dictionary["password"] = password
 		metadata_dictionary["userText"] = metadata_dictionary.get("userText")\
 											if metadata_dictionary.get("userText") != None\
-											else str(raw_input("Tag's description [can be empty]:"))
+											else input("Tag's description [can be empty]:")
 
 		# go through command line options and, if they are set, overwrite entries
 		for (option_name, option_value) in command_line_data.__dict__.items():
@@ -437,7 +437,7 @@ def parse_arguments():
 		for key in metadata_dictionary:
 			if not(key) in ["username", "password", "destinationTag"]:
 				value_to_print = metadata_dictionary[key] if metadata_dictionary[key] != None else defaults[key]
-				print("\t%s : %s" % (key, value_to_print))
+				print(f'\t{key} : {value_to_print}')
 
 		if getInput("\nDo you want to continue? [y/n] ") != "y":
 			exit()
@@ -468,14 +468,14 @@ if __name__ == "__main__":
 	except Exception as e:
 		print(horizontal_rule)
 		print(e)
-		print("Could not connect to server at %s"%final_service_url)
+		print(f"Could not connect to server at {final_service_url}")
 		print("If you specified a server please check it is correct. If that is not the issue please contact the AlcaDB team.")
 		print(horizontal_rule)
 		exit(1)
 	if server_version["version"] != __version__:
 		print(horizontal_rule)
 		print("Local upload script is different than server version. Please run the following command to get the latest script.")
-		print("curl --insecure -o uploadConditions.py %sget_upload_script/ && chmod +x uploadConditions.py;"%final_service_url)
+		print(f"curl --insecure -o uploadConditions.py {final_service_url}get_upload_script/ && chmod +x uploadConditions.py;")
 		print(horizontal_rule)
 		exit(1)
 
