@@ -120,7 +120,7 @@ I will ask you some questions to fill the metadata file. For some of the questio
 
             if dataCursor.fetchone() is not None:
                dataCursor.execute(f"SELECT name FROM {table_name}")
-               inputTags = dataCursor.fetchall()
+               inputTags = [name for (name,) in dataCursor.fetchall()]
             # In any other case, do not try to get the inputTags
             else:
                 raise Exception()
@@ -140,7 +140,6 @@ I will ask you some questions to fill the metadata file. For some of the questio
         else:
             print('\nI found the following input tags in your SQLite data file:')
             for (index, inputTag) in enumerate(inputTags):
-                #same like: print('   %s) %s' % (index, inputTag))
                 print('   {}) {}'.format(index, inputTag))
 
             inputTag = getInputChoose(inputTags, '0',
