@@ -3,6 +3,7 @@
 
 #include "SimG4Core/Application/interface/LowEnergyFastSimModel.h"
 #include "SimG4Core/Application/interface/TrackingAction.h"
+#include "SimG4Core/Geometry/interface/DD4hep2DDDName.h"
 #include "SimG4Core/Notification/interface/TrackInformation.h"
 
 #include "G4VFastSimulationModel.hh"
@@ -29,7 +30,7 @@ LowEnergyFastSimModel::LowEnergyFastSimModel(const G4String& name, G4Region* reg
   fMaterial = nullptr;
   auto table = G4Material::GetMaterialTable();
   for (auto const& mat : *table) {
-    G4String nam = mat->GetName();
+    G4String nam = (G4String)(DD4hep2DDDName::noNameSpace(mat->GetName()));
     size_t n = nam.size();
     if (n > 4) {
       G4String sn = nam.substr(n - 5, 5);
@@ -39,7 +40,7 @@ LowEnergyFastSimModel::LowEnergyFastSimModel(const G4String& name, G4Region* reg
       }
     }
   }
-  G4String nm = (nullptr == fMaterial) ? "not found!" : fMaterial->GetName();
+  G4String nm = (nullptr == fMaterial) ? "not found!" : (G4String)(DD4hep2DDDName::noNameSpace(fMaterial->GetName()));
   edm::LogVerbatim("LowEnergyFastSimModel") << "LowEGFlash material: <" << nm << ">";
 }
 
