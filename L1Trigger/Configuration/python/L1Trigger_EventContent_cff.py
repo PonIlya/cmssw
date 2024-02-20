@@ -197,10 +197,10 @@ def _appendPhase2Digis(obj):
         'keep *_l1tPFClustersFromHGC3DClusters_*_*',
         'keep *_l1tPFTracksFromL1TracksBarrel_*_*',
         'keep *_l1tPFTracksFromL1TracksHGCal_*_*',
-        'keep *_l1tSCPFL1PuppiCorrectedEmulator_*_*',
-        'keep *_l1tSCPFL1PuppiCorrectedEmulatorMHT_*_*',
-        'keep *_l1tSCPFL1PuppiExtendedCorrectedEmulator_*_*',
-        'keep *_l1tSCPFL1PuppiExtendedCorrectedEmulatorMHT_*_*',
+        'keep *_l1tSC4PFL1PuppiCorrectedEmulator_*_*',
+        'keep *_l1tSC4PFL1PuppiCorrectedEmulatorMHT_*_*',
+        'keep *_l1tSC4PFL1PuppiExtendedCorrectedEmulator_*_*',
+        'keep *_l1tSC4PFL1PuppiExtendedCorrectedEmulatorMHT_*_*',
         'keep *_l1tPhase1JetProducer9x9_*_*', 
         'keep *_l1tPhase1JetCalibrator9x9_*_*',
         'keep *_l1tPhase1JetSumsProducer9x9_*_*',
@@ -231,6 +231,7 @@ def _appendPhase2Digis(obj):
         'keep *_l1tTkStubsGmt_*_*',
         'keep *_l1tTkMuonsGmt_*_*',
         'keep *_l1tSAMuonsGmt_*_*',
+        'keep *_l1tTkMuonsGmtLowPtFix_*_*', # in the long run this should be removed, but these fix objects will be used for now.
         ]
     obj.outputCommands += l1Phase2Digis
 

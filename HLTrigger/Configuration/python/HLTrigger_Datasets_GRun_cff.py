@@ -1,4 +1,4 @@
-# /dev/CMSSW_13_3_0/GRun
+# /dev/CMSSW_14_0_0/GRun
 
 import FWCore.ParameterSet.Config as cms
 
@@ -1197,6 +1197,16 @@ streamPhysicsCommissioning_datasetHcalNZS_selector.triggerConditions = cms.vstri
     'HLT_HcalPhiSym_v19'
 )
 
+from HLTrigger.HLTfilters.triggerResultsFilter_cfi import triggerResultsFilter as streamPhysicsCommissioning_datasetMinimumBias_selector
+streamPhysicsCommissioning_datasetMinimumBias_selector.hltResults = cms.InputTag('TriggerResults', '', 'HLT')
+streamPhysicsCommissioning_datasetMinimumBias_selector.l1tResults = cms.InputTag('')
+streamPhysicsCommissioning_datasetMinimumBias_selector.throw      = cms.bool(False)
+streamPhysicsCommissioning_datasetMinimumBias_selector.triggerConditions = cms.vstring(
+    'HLT_Physics_v10',
+    'HLT_Random_v3',
+    'HLT_ZeroBias_v9'
+)
+
 from HLTrigger.HLTfilters.triggerResultsFilter_cfi import triggerResultsFilter as streamPhysicsCommissioning_datasetMonteCarlo_selector
 streamPhysicsCommissioning_datasetMonteCarlo_selector.hltResults = cms.InputTag('TriggerResults', '', 'HLT')
 streamPhysicsCommissioning_datasetMonteCarlo_selector.l1tResults = cms.InputTag('')
@@ -1408,7 +1418,12 @@ streamPhysicsDispJetBTagMuEGTau_datasetTau_selector.triggerConditions = cms.vstr
     'HLT_DoubleMediumDeepTauPFTauHPS30_L2NN_eta2p1_PFJet60_v6',
     'HLT_DoubleMediumDeepTauPFTauHPS30_L2NN_eta2p1_PFJet75_v6',
     'HLT_DoubleMediumDeepTauPFTauHPS35_L2NN_eta2p1_v6',
-    'HLT_LooseDeepTauPFTauHPS180_L2NN_eta2p1_v7'
+    'HLT_DoublePNetTauhPFJet30_Medium_L2NN_eta2p3_v1',
+    'HLT_DoublePNetTauhPFJet30_Tight_L2NN_eta2p3_v1',
+    'HLT_LooseDeepTauPFTauHPS180_L2NN_eta2p1_v7',
+    'HLT_SinglePNetTauhPFJet130_Loose_L2NN_eta2p3_v1',
+    'HLT_SinglePNetTauhPFJet130_Medium_L2NN_eta2p3_v1',
+    'HLT_SinglePNetTauhPFJet130_Tight_L2NN_eta2p3_v1'
 )
 
 
@@ -2071,16 +2086,22 @@ streamPhysicsMuon0_datasetMuon0_selector.triggerConditions = cms.vstring(
     'HLT_IsoMu24_eta2p1_MediumDeepTauPFTauHPS30_L2NN_eta2p1_PFJet75_CrossL1_v6',
     'HLT_IsoMu24_eta2p1_MediumDeepTauPFTauHPS35_L2NN_eta2p1_CrossL1_v7',
     'HLT_IsoMu24_eta2p1_MediumDeepTauPFTauHPS45_L2NN_eta2p1_CrossL1_v6',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet130_Loose_L2NN_eta2p3_CrossL1_v1',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet130_Medium_L2NN_eta2p3_CrossL1_v1',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet130_Tight_L2NN_eta2p3_CrossL1_v1',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet30_Medium_L2NN_eta2p3_CrossL1_v1',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet30_Tight_L2NN_eta2p3_CrossL1_v1',
     'HLT_IsoMu24_eta2p1_v21',
     'HLT_IsoMu24_v19',
     'HLT_IsoMu27_MediumChargedIsoDisplacedPFTauHPS24_eta2p1_SingleL1_v2',
-    'HLT_IsoMu27_MediumDeepTauPFTauHPS20_eta2p1_SingleL1_v6',
     'HLT_IsoMu27_v22',
     'HLT_IsoMu50_AK8PFJet220_SoftDropMass40_PNetBB0p06_v3',
     'HLT_IsoMu50_AK8PFJet220_SoftDropMass40_v6',
     'HLT_IsoMu50_AK8PFJet230_SoftDropMass40_PNetBB0p06_v3',
     'HLT_IsoMu50_AK8PFJet230_SoftDropMass40_PNetBB0p10_v3',
     'HLT_IsoMu50_AK8PFJet230_SoftDropMass40_v6',
+    'HLT_IsoTrk200_L1SingleMuShower_v1',
+    'HLT_IsoTrk400_L1SingleMuShower_v1',
     'HLT_L1CSCShower_DTCluster50_v6',
     'HLT_L1CSCShower_DTCluster75_v6',
     'HLT_L3dTksMu10_NoVtx_DxyMin0p01cm_v6',
@@ -2180,16 +2201,22 @@ streamPhysicsMuon1_datasetMuon1_selector.triggerConditions = cms.vstring(
     'HLT_IsoMu24_eta2p1_MediumDeepTauPFTauHPS30_L2NN_eta2p1_PFJet75_CrossL1_v6',
     'HLT_IsoMu24_eta2p1_MediumDeepTauPFTauHPS35_L2NN_eta2p1_CrossL1_v7',
     'HLT_IsoMu24_eta2p1_MediumDeepTauPFTauHPS45_L2NN_eta2p1_CrossL1_v6',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet130_Loose_L2NN_eta2p3_CrossL1_v1',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet130_Medium_L2NN_eta2p3_CrossL1_v1',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet130_Tight_L2NN_eta2p3_CrossL1_v1',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet30_Medium_L2NN_eta2p3_CrossL1_v1',
+    'HLT_IsoMu24_eta2p1_PNetTauhPFJet30_Tight_L2NN_eta2p3_CrossL1_v1',
     'HLT_IsoMu24_eta2p1_v21',
     'HLT_IsoMu24_v19',
     'HLT_IsoMu27_MediumChargedIsoDisplacedPFTauHPS24_eta2p1_SingleL1_v2',
-    'HLT_IsoMu27_MediumDeepTauPFTauHPS20_eta2p1_SingleL1_v6',
     'HLT_IsoMu27_v22',
     'HLT_IsoMu50_AK8PFJet220_SoftDropMass40_PNetBB0p06_v3',
     'HLT_IsoMu50_AK8PFJet220_SoftDropMass40_v6',
     'HLT_IsoMu50_AK8PFJet230_SoftDropMass40_PNetBB0p06_v3',
     'HLT_IsoMu50_AK8PFJet230_SoftDropMass40_PNetBB0p10_v3',
     'HLT_IsoMu50_AK8PFJet230_SoftDropMass40_v6',
+    'HLT_IsoTrk200_L1SingleMuShower_v1',
+    'HLT_IsoTrk400_L1SingleMuShower_v1',
     'HLT_L1CSCShower_DTCluster50_v6',
     'HLT_L1CSCShower_DTCluster75_v6',
     'HLT_L3dTksMu10_NoVtx_DxyMin0p01cm_v6',

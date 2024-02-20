@@ -11,3 +11,9 @@
 
 <!-- test script hltMenuContentToCSVs -->
 <test name="test_hltMenuContentToCSVs" command="test_hltMenuContentToCSVs.sh"/>
+
+<!-- test script hltFindDuplicates -->
+<test name="test_hltFindDuplicates" command="test_hltFindDuplicates.sh"/>
+
+<!-- test script testOnlineVsDevTablesConsistency -->
+<test name="test_OnlineVsDevTablesConsistency" command="test_OnlineVsDevTablesConsistency.sh"/>

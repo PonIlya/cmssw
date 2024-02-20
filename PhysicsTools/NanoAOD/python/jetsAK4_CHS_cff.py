@@ -36,14 +36,14 @@ looseJetId = cms.EDProducer("PatJetIDValueMapProducer",
 )
 tightJetId = cms.EDProducer("PatJetIDValueMapProducer",
     filterParams=cms.PSet(
-        version = cms.string('RUN3WINTER22CHS'),
+        version = cms.string('RUN3CHSruns2022FGruns2023CD'),
         quality = cms.string('TIGHT'),
     ),
     src = cms.InputTag("updatedJets")
 )
 tightJetIdLepVeto = cms.EDProducer("PatJetIDValueMapProducer",
     filterParams=cms.PSet(
-        version = cms.string('RUN3WINTER22CHS'),
+        version = cms.string('RUN3CHSruns2022FGruns2023CD'),
         quality = cms.string('TIGHTLEPVETO'),
     ),
     src = cms.InputTag("updatedJets")
@@ -61,9 +61,9 @@ run2_jme_2016.toModify(
 )
 
 run3_jme_Winter22runsBCDEprompt.toModify(
-    tightJetId.filterParams, version = "RUN3WINTER22CHSrunsBCDEprompt"
+    tightJetId.filterParams, version = "RUN3CHSruns2022BCDEprompt"
 ).toModify(
-    tightJetIdLepVeto.filterParams, version = "RUN3WINTER22CHSrunsBCDEprompt"
+    tightJetIdLepVeto.filterParams, version = "RUN3CHSruns2022BCDEprompt"
 )
 
 bJetVars = cms.EDProducer("JetRegressionVarProducer",
@@ -518,6 +518,7 @@ corrT1METJetTable = simpleCandidateFlatTableProducer.clone(
         eta  = Var("eta",  float,precision=12),
         phi = Var("phi", float, precision=12),
         area = Var("jetArea()", float, doc="jet catchment area, for JECs",precision=10),
+        EmEF = Var("chargedEmEnergyFraction()+neutralEmEnergyFraction()", float, doc="charged+neutral Electromagnetic Energy Fraction", precision=6),
     )
 )
 

@@ -1500,7 +1500,7 @@ class ConfigBuilder(object):
         #register to the genstepfilter the name of the path (static right now, but might evolve)
         self.executeAndRemember('process.genstepfilter.triggerConditions=cms.vstring("generation_step")')
 
-        if 'reGEN' in self.stepMap:
+        if 'reGEN' in self.stepMap or stepSpec == 'pgen_smear':
             #stop here
             return
 
@@ -1836,7 +1836,15 @@ class ConfigBuilder(object):
         # build and inject the sequence
         if len(_nanoSeq) < 1 and '@' in stepSpec:
             raise Exception(f'The specified mapping: {stepSpec} generates an empty NANO sequence. Please provide a valid mappign')
-        self.scheduleSequence('+'.join(_nanoSeq), 'nanoAOD_step')
+        _seqToSchedule = []
+        for _subSeq in _nanoSeq:
+            if '.' in _subSeq:
+                _cff,_seq = _subSeq.split('.')
+                self.loadAndRemember(_cff)
+                _seqToSchedule.append(_seq)
+            else:
+                _seqToSchedule.append(_subSeq)
+        self.scheduleSequence('+'.join(_seqToSchedule), 'nanoAOD_step')
         
         # add the customisations
         for custom in _nanoCustoms:

@@ -44,6 +44,9 @@ pfClusteringHBHEHFOnlyTask = cms.Task(particleFlowRecHitHBHEOnly,
                                       particleFlowClusterHF,
                                       particleFlowClusterHCALOnly)
 
+#--- Legacy HCAL Only Task
+pfClusteringHBHEHFOnlyLegacyTask = pfClusteringHBHEHFOnlyTask.copy()
+
 pfClusteringHOTask = cms.Task(particleFlowRecHitHO,particleFlowClusterHO)
 pfClusteringHO = cms.Sequence(pfClusteringHOTask)
 
@@ -91,6 +94,6 @@ phase2_timing.toModify(particleFlowClusterECAL,
 from Configuration.ProcessModifiers.alpaka_cff import alpaka
 
 def _addProcessPFClusterAlpaka(process):
-    process.load("RecoParticleFlow.PFClusterProducerAlpaka.pfClusterHBHEAlpaka_cff")
+    process.load("RecoParticleFlow.PFClusterProducer.pfClusterHBHEAlpaka_cff")
 
 modifyConfigurationPFClusterAlpaka_ = alpaka.makeProcessModifier(_addProcessPFClusterAlpaka)

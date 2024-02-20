@@ -71,8 +71,8 @@ CTPPSLHCInfoPlotter::CTPPSLHCInfoPlotter(const edm::ParameterSet &iConfig)
                                       -0.005,
                                       1.005)),
 
-      h_fill_(new TH1D("h_fill", ";fill", 4001, 3999.5, 8000.5)),
-      h_run_(new TH1D("h_run", ";run", 6000, 270E3, 330E3)) {}
+      h_fill_(new TH1D("h_fill", ";fill", 6001, 3999.5, 10000.5)),
+      h_run_(new TH1D("h_run", ";run", 6000, 270E3, 430E3)) {}
 
 //----------------------------------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ void CTPPSLHCInfoPlotter::fillDescriptions(edm::ConfigurationDescriptions &descr
 
   desc.add<std::string>("outputFile", "")->setComment("output file");
 
-  descriptions.add("ctppsLHCInfoPlotter", desc);
+  descriptions.add("ctppsLHCInfoPlotterDefault", desc);
 }
 
 //----------------------------------------------------------------------------------------------------

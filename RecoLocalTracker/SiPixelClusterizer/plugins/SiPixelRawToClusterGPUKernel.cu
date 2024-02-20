@@ -26,13 +26,14 @@
 #include "HeterogeneousCore/CUDAUtilities/interface/cudaCheck.h"
 #include "HeterogeneousCore/CUDAUtilities/interface/device_unique_ptr.h"
 #include "HeterogeneousCore/CUDAUtilities/interface/host_unique_ptr.h"
-#include "RecoLocalTracker/SiPixelClusterizer/plugins/gpuCalibPixel.h"
-#include "RecoLocalTracker/SiPixelClusterizer/plugins/gpuClusterChargeCut.h"
-#include "RecoLocalTracker/SiPixelClusterizer/plugins/gpuClustering.h"
+
 // local includes
 #include "SiPixelRawToClusterGPUKernel.h"
+#include "gpuCalibPixel.h"
+#include "gpuClusterChargeCut.h"
+#include "gpuClustering.h"
 
-// #define GPU_DEBUG
+//#define GPU_DEBUG
 
 namespace pixelgpudetails {
 
@@ -288,7 +289,7 @@ namespace pixelgpudetails {
                                    const uint32_t wordCounter,
                                    const uint32_t *word,
                                    const uint8_t *fedIds,
-                                   SiPixelDigisCUDASOAView digisView,
+                                   SiPixelDigisSoA::View digisView,
                                    cms::cuda::SimpleVector<SiPixelErrorCompact> *err,
                                    bool useQualityInfo,
                                    bool includeErrors) {
@@ -606,8 +607,8 @@ namespace pixelgpudetails {
           digis_d->moduleId(), clusters_d->moduleStart(), digis_d->clus(), wordCounter);
       cudaCheck(cudaGetLastError());
 
-      threadsPerBlock = ((TrackerTraits::maxPixInModule / 16 + 128 - 1) / 128) *
-                        128;  /// should be larger than maxPixInModule/16 aka (maxPixInModule/maxiter in the kernel)
+      // should be larger than maxPixInModule/16 aka (maxPixInModule/maxiter in the kernel)
+      threadsPerBlock = ((TrackerTraits::maxPixInModule / 16 + 128 - 1) / 128) * 128;
       blocks = TrackerTraits::numberOfModules;
 #ifdef GPU_DEBUG
       std::cout << "CUDA findClus kernel launch with " << blocks << " blocks of " << threadsPerBlock << " threads\n";
@@ -751,13 +752,13 @@ namespace pixelgpudetails {
     cudaCheck(cudaGetLastError());
 
     auto nModules_Clusters_d = cms::cuda::make_device_unique<uint32_t[]>(3, stream);
-    // MUST be ONE block
 
 #ifdef GPU_DEBUG
     cudaCheck(cudaStreamSynchronize(stream));
     std::cout << "CUDA fillHitsModuleStart kernel launch \n";
 #endif
 
+    // MUST be ONE block
     fillHitsModuleStart<TrackerTraits><<<1, 1024, 0, stream>>>(clusters_d->clusInModule(),
                                                                clusters_d->clusModuleStart(),
                                                                clusters_d->moduleStart(),
